@@ -1,35 +1,316 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
 body {
+    font-family: "Silkscreen", monospace;
+    background: var(--black);
+}
+body::after {
 
-    margin:0;
+    content:"";
 
-    font-family:Arial;
+    position:fixed;
 
-    background:#ececec;
+    inset:0;
+
+    background:
+    repeating-linear-gradient(
+        0deg,
+        rgba(255,255,255,.05),
+        rgba(255,255,255,.05) 1px,
+        transparent 1px,
+        transparent 3px
+    );
+
+    pointer-events:none;
 
 }
 
-#game{
+h1, button {
+    font-family: "Press Start 2P", monospace;
+}
+h2{
+        font-family: "Silkscreen", monospace;
+}
 
-    width:900px;
+#app {
+    width: 900px;
+    min-height: 600px;
+}
 
-    margin:auto;
+:root {
 
-    text-align:center;
+    --black: #000000;
+    --white: #ffffff;
+    --gray: #aaaaaa;
 
-    padding-top:100px;
+    --green: #00ff66;
+    --yellow: #ffff00;
+    --red: #ff3333;
 
 }
 
-button{
+.screen{
 
-    display:block;
+    display:flex;
 
-    width:250px;
+    justify-content:center;
 
-    margin:15px auto;
+    align-items:center;
 
-    padding:15px;
+    min-height:100vh;
+
+}
+
+.panel {
+
+    width:800px;
+
+    background:black;
+
+    border:4px solid white;
+
+    padding:40px;
+
+    color:white;
+
+}
+
+.game-title{
+
+    font-size:64px;
+
+    font-weight:900;
+
+    line-height:1;
+
+    margin-bottom:15px;
+
+}
+.subtitle{
+
+    font-size:22px;
+
+    margin-bottom:50px;
+
+}
+
+button {
+  background: black;
+  color: white;
+  border: 3px solid white;
+  padding: 18px;
+  font-family: Press Start 2P;
+  cursor: pointer;
+}
+
+button:hover:not(:disabled) {
+  background: white;
+  color: black;
+}
+
+.primary-button {
+  background: black;
+  border: 3px solid var(--green);
+  color: var(--green);
+}
+
+.primary-button:hover,
+.primary-button:hover:not(:disabled) {
+  background: var(--green);
+  color: black;
+}
+
+.character-grid {
+    display: grid;
+
+    grid-template-columns: repeat(4, 1fr);
+
+    justify-content: center;
+
+    gap: 2x;
+}
+@media(max-width:900px){
+
+    .character-grid{
+
+        grid-template-columns:repeat(2,1fr);
+
+    }
+
+}
+.character-card {
+
+    background:black;
+
+    color:white;
+
+    border:3px solid white;
+
+    width:180px;
+
+    height:350px;
+
+}
+.character-card.locked {
+
+    color:#666;
+
+    border-color:#666;
+
+}
+.character-card:not(.locked):not(.selected):hover {
+    background:white;
+    color:black;
+    border:3px solid black;
+}
+
+.portrait {
+
+    height:170px;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    border-bottom:2px solid white;
+
+    font-size:12px;
+
+}
+
+.character-info{
+
+    padding:20px;
+
+}
+
+.character-info h2{
+
+    margin-bottom:6px;
+
+}
+
+.character-info h3{
+
+    color:#666;
+
+    font-size:12px;
+
+    margin-bottom:5px;
+
+}
+
+.character-card.selected {
+    border: 5px solid var(--green);
+    color:var(--green);
+}
+
+.locked {
+    opacity: .45;
+    filter: grayscale(100%);
+    cursor: not-allowed;
+}
+
+.menu-buttons{
+
+    display:flex;
+    flex-direction:column;
+
+    gap:10px;
+
+    margin:20px 0;
+    font-size:14px;
+
+}
+
+.navigation{
+
+    margin-top:10px;
+
+    display:flex;
+
+    justify-content:space-between;
+
+}
+
+.navigation button{
+
+    width:100px;
+    font-size:16px;
+}
+
+.experiment-grid {
+
+    display:grid;
+
+    grid-template-columns: repeat(2, 240px);
+
+    justify-content:center;
+
+    gap: 10px;
+
+    margin:15px 0;
+
+}
+
+.experiment-button {
+
+    height:100px;
+
+    border:3px solid var(--border);
+
+    border-radius:16px;
+
+    background:white;
+
+    font-size:15px;
+
+    font-weight:700;
+
+    display:flex;
+
+    flex-direction:column;
+
+    justify-content:center;
+
+    align-items:center;
+
+    gap:10px;
+
+}
+
+.experiment-icon {
 
     font-size:20px;
+
+}
+
+.experiment-button small {
+
+    color:#777;
+
+    font-size:12px;
+
+}
+
+.experiment-button:not(:disabled):hover {
+
+    transform:translateY(-5px);
+
+    box-shadow:0 8px 15px rgba(0,0,0,0.15);
+
+}
+
+.experiment-button:disabled {
+
+    opacity:0.5;
+
+    cursor:not-allowed;
 
 }
