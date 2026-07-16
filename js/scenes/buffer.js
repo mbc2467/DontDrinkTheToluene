@@ -3,88 +3,107 @@ import { showScene, goBack } from "../engine/sceneManager.js";
 import { buffers } from "../data/buffers.js";
 import { chemicals } from "../data/chemicals.js";
 
+import { showToluenePrompt } from "./toluenePrompt.js";
+import { showTolueneGameOver } from "./tolueneGameOver.js";
+
 let currentBuffer = null;
 let selectedChemicals = [];
+let toluenePromptShown = false;
 
 export function showBufferGame() {
     currentBuffer = randomBuffer();
     selectedChemicals = [];
+    toluenePromptShown = false;
     const shuffledChemicals = shuffle(chemicals);
+    let html = `
+    <div class="screen">
+    <div class="panel">
+    <h1>MAKE BUFFER</h1>
+    <p class="subtitle">
+    ${currentBuffer.name}
+    ${currentBuffer.subtitle}
+    </p>
+    <p>
+    Select every chemical needed.
+    </p>
+    <div class="chemical-grid">
+    `;
 
     for (const chemical of shuffledChemicals) {
-      let html = `
-      <div class="screen">
-      <div class="panel">
-      <h1>MAKE BUFFER</h1>
-      <p class="subtitle">
-      ${currentBuffer.name}
-      ${currentBuffer.subtitle}
-      </p>
-      <p>
-      Select every chemical needed.
-      </p>
-      <div class="chemical-grid">
-      `;
 
-      for (const chemical of chemicals) {
+        html += `
 
-          html += `
+            <div
+                class="chemical-card"
+                data-name="${chemical}">
 
-              <div
-                  class="chemical-card"
-                  data-name="${chemical}">
+                ${chemical}
 
-                  ${chemical}
+            </div>
 
-              </div>
+        `;
 
-          `;
-
-      }
-
-      html += `
-      </div>
-      <p id="selectedCount">
-          Selected: 0/${currentBuffer.ingredients.length}
-      </p>
-      <div class="navigation">
-      <button id="backButton">
-      BACK
-      </button>
-      <button id="finishButton">
-      FINISH
-      </button>
-      </div>
-      </div>
-      </div>
-      `;
-
-      showScene(html);
-
-      document
-      .querySelectorAll(".chemical-card")
-      .forEach(card => {
-
-          card.addEventListener("click", () => {
-
-              const chemical = card.dataset.name;
-              if (selectedChemicals.includes(chemical)) {
-                  selectedChemicals = selectedChemicals.filter(c => c !== chemical);
-                  card.classList.remove("selected");
-              } else {
-                  selectedChemicals.push(chemical);
-                  card.classList.add("selected");
-
-              }
-              updateSelectedCount();
-          });
-      });
-
-      document.getElementById("selectedCount").textContent = `Selected: ${selectedChemicals.length}`;
-      document.getElementById("finishButton").addEventListener("click", finishBufferGame);
-
-      document.getElementById("backButton").addEventListener("click", goBack);
     }
+
+    html += `
+    </div>
+    <p id="selectedCount">
+        Selected: 0/${currentBuffer.ingredients.length}
+    </p>
+    <div class="navigation">
+    <button id="backButton">
+    BACK
+    </button>
+    <button id="finishButton">
+    FINISH
+    </button>
+    </div>
+    </div>
+    </div>
+    `;
+
+    showScene(html);
+
+    document
+    .querySelectorAll(".chemical-card")
+    .forEach(card => {
+
+        card.addEventListener("click", () => {
+
+            const chemical = card.dataset.name;
+            if (chemical === "Toluene" && !toluenePromptShown) {
+                toluenePromptShown = true;
+                showToluenePrompt(
+                    () => {
+                        showTolueneGameOver();
+                    },
+                    () => {
+                        selectedChemicals.push("Toluene");
+                        card.classList.add("selected");
+                        updateSelectedCount();
+                    }
+                );
+                return;
+            }
+            if (selectedChemicals.includes(chemical)) {
+                selectedChemicals = selectedChemicals.filter(c => c !== chemical);
+                card.classList.remove("selected");
+                if(chemical === "Toluene") {
+                    toluenePromptShown = false;
+                }
+            } else {
+                selectedChemicals.push(chemical);
+                card.classList.add("selected");
+
+            }
+            updateSelectedCount();
+        });
+    });
+
+    document.getElementById("selectedCount").textContent = `Selected: ${selectedChemicals.length}`;
+    document.getElementById("finishButton").addEventListener("click", finishBufferGame);
+
+    document.getElementById("backButton").addEventListener("click", goBack);
 }
 
 function randomBuffer() {

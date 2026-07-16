@@ -384,3 +384,37 @@ button:hover:not(:disabled) {
     color:black;
 
 }
+
+.modal-overlay {
+
+    position: fixed;
+
+    inset: 0;
+
+    background: rgba(0,0,0,.65);
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    z-index: 1000;
+
+}
+
+.modal-panel {
+
+    width: 400px;
+
+    padding: 30px;
+
+    background: black;
+
+    border: 4px solid white;
+
+    color: white;
+
+    text-align: center;
+
+}
