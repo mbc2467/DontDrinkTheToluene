@@ -1,73 +1,74 @@
-import { showScene, goBack, goHome } from "../engine/sceneManager.js";
+import { minigames } from "../data/minigames.js";
+import { getCharacter } from "../engine/gameState.js";
+import { setScene, showScene, goBack, goHome } from "../engine/sceneManager.js";
+
+import { showBufferGame } from "./buffer.js";
+import { showGlasswareGame } from "./glassware.js";
+
+function createExperimentCard(game) {
+
+    return `
+        <div
+            class="experiment-card ${game.unlocked ? "" : "locked"}"
+            data-id="${game.id}">
+
+            <div class="experiment-code">
+                ${game.code}
+            </div>
+
+            <div class="experiment-title">
+                ${game.title}
+            </div>
+
+            <div class="experiment-status">
+                STATUS: ${game.status}
+            </div>
+
+        </div>
+    `;
+}
 
 export function showMenu() {
 
-    showScene(`
+    let html = `
+        <div class="screen">
 
-    <div class="screen">
+            <div class="panel">
 
-        <div class="panel">
+                <h1>SELECT EXPERIMENT</h1>
 
-            <h1>Today's Lab Tasks</h1>
+                <p class="subtitle">
+                    Choose today's laboratory task.
+                </p>
 
-            <p class="subtitle">
-                Choose an experiment to begin.
-            </p>
+                <div class="experiment-grid">
+    `;
 
-            <div class="experiment-grid">
+    for (const game of minigames) {
+        html += createExperimentCard(game);
+    }
 
-                <button id="bufferButton" class="experiment-button">
-                    <span class="experiment-icon">🧪</span>
-                    Buffer Preparation
-                </button>
+    html += `
+                </div>
 
-                <button class="experiment-button" disabled>
-                    <span class="experiment-icon">📈</span>
-                    Dynamic Light Scattering
-                    <small>Coming Soon</small>
-                </button>
+                <div class="navigation">
 
-                <button class="experiment-button" disabled>
-                    <span class="experiment-icon">🧬</span>
-                    Size Exclusion Chromatography
-                    <small>Coming Soon</small>
-                </button>
+                    <button id="backButton">
+                        < BACK
+                    </button>
 
-                <button class="experiment-button" disabled>
-                    <span class="experiment-icon">⚡</span>
-                    Ion Exchange Chromatography
-                    <small>Coming Soon</small>
-                </button>
+                    <button id="homeButton">
+                        HOME >
+                    </button>
 
-            </div>
-
-            <hr>
-
-            <button>
-                🏆
-            </button>
-
-            <button>
-                ⚙
-            </button>
-
-            <div class="navigation">
-
-                <button id="backButton">
-                    ← Back
-                </button>
-
-                <button id="homeButton">
-                    ⌂ Home
-                </button>
+                </div>
 
             </div>
 
         </div>
+    `;
 
-    </div>
-
-    `);
+    showScene(html);
 
     document
         .getElementById("backButton")
@@ -78,10 +79,50 @@ export function showMenu() {
         .addEventListener("click", goHome);
 
     document
-        .getElementById("bufferButton")
-        .addEventListener("click", () => {
+        .querySelectorAll(".experiment-card")
+        .forEach(card => {
 
-            console.log("Starting Buffer Preparation");
+            if (card.classList.contains("locked"))
+                return;
+
+            card.addEventListener("click", () => {
+
+                const id = card.dataset.id;
+
+                switch (id) {
+
+                    case "buffer":
+
+                        if (getCharacter() === "michael") {
+
+                            setScene(showGlasswareGame);
+
+                        } else {
+
+                            setScene(showBufferGame);
+
+                        }
+
+                        break;
+
+                    // Future minigames
+
+                    case "ls":
+                        console.log("Light Scattering");
+                        break;
+
+                    case "sec":
+                        console.log("SEC");
+                        break;
+
+                    case "iec":
+                        console.log("IEC");
+                        break;
+
+                }
+
+            });
 
         });
+
 }

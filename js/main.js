@@ -1,5 +1,4 @@
-console.log("Main.js loaded!");
-
+import { setScene } from "./engine/sceneManager.js";
 import { showTitle } from "./scenes/title.js";
 
-showTitle();
+setScene(showTitle);

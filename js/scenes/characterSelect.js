@@ -1,6 +1,7 @@
-import { showScene } from "../engine/sceneManager.js";
+import { showScene, setScene } from "../engine/sceneManager.js";
 import { characters } from "../data/characters.js";
 import { showMenu } from "./menu.js";
+import { setCharacter } from "../engine/gameState.js";
 
 let selectedCharacter = null;
 
@@ -18,7 +19,7 @@ function createCharacterCard(character) {
 
                 <h2>${character.name}</h2>
 
-                <h3>${character.title}</h3>
+                <p>${character.title}</p>
 
                 <p>${character.description}</p>
 
@@ -31,34 +32,16 @@ function createCharacterCard(character) {
 export function showCharacterSelect() {
 
     let html = `
+        <div class="character-panel">
 
-        <h1>Select Character</h1>
+            <h1>Select Character</h1>
 
-        <div class="character-grid">
+            <div class="character-grid">
 
     `;
 
     for (const character of characters) {
-
-        html += `
-
-            <div
-                class="character-card ${character.unlocked ? "" : "locked"}"
-                data-id="${character.id}"
-            >
-
-                <div class="portrait"></div>
-
-                <h2>${character.name}</h2>
-
-                <p>${character.title}</p>
-
-                <p>${character.description}</p>
-
-            </div>
-
-        `;
-
+        html += createCharacterCard(character);
     }
 
     html += `
@@ -71,6 +54,7 @@ export function showCharacterSelect() {
 
         </button>
 
+        </div>
     `;
 
     showScene(html);
@@ -90,11 +74,9 @@ export function showCharacterSelect() {
 
                 card.classList.add("selected");
 
-                selectedCharacter = card.dataset.id;
+                setCharacter(card.dataset.id);
 
-                document
-                    .getElementById("nextButton")
-                    .disabled = false;
+                document.getElementById("nextButton").disabled = false;
 
             });
 
@@ -102,6 +84,8 @@ export function showCharacterSelect() {
 
     document
         .getElementById("nextButton")
-        .addEventListener("click", showMenu);
+        .addEventListener("click", () => {
+            setScene(showMenu);
+        });
 
 }

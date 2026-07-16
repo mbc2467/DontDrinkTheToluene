@@ -1,4 +1,4 @@
-import { showScene } from "../engine/sceneManager.js";
+import { showScene, setScene } from "../engine/sceneManager.js";
 import { showCharacterSelect } from "./characterSelect.js";
 
 export function showTitle() {
@@ -37,6 +37,8 @@ export function showTitle() {
 
     document
         .getElementById("playButton")
-        .addEventListener("click", showCharacterSelect);
+        .addEventListener("click", () => {
+            setScene(showCharacterSelect);
+        });
 
 }
