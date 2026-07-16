@@ -12,8 +12,10 @@ function createCharacterCard(character) {
              data-id="${character.id}">
 
             <div class="portrait">
-                <span>Portrait</span>
-                <small>Coming Soon</small>
+                <img
+                    src="assets/images/${character.sprite}"
+                    alt="${character.name}"
+                    class="character-sprite">
             </div>
 
             <div class="character-info">

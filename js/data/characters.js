@@ -5,6 +5,7 @@ export const characters = [
         name: "Mallory",
         title: "Physics Major",
         description: "...",
+        sprite: "TolueneMallorySprite.png",
         unlocked: true
     },
 
@@ -13,6 +14,7 @@ export const characters = [
         name: "Nishi",
         title: "Chemistry Major",
         description: "...",
+        sprite: "TolueneNishiSprite.png",
         unlocked: true
     },
 
@@ -21,6 +23,7 @@ export const characters = [
         name: "Michael",
         title: "Physics Major",
         description: "...",
+        sprite: "TolueneMichaelSprite.png",
         unlocked: true
     },
 
@@ -28,7 +31,8 @@ export const characters = [
         id: "malcolm",
         name: "Malcolm",
         title: "PhD Student",
-        description: "Complete all undergraduate training to unlock.",
+        description: "Complete undergraduate training to unlock.",
+        sprite: "TolueneMalcolmSprite.png",
         unlocked: false
     }
 

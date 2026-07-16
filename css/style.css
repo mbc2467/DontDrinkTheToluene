@@ -206,19 +206,27 @@ button:hover:not(:disabled) {
     border:3px solid white;
 }
 
-.portrait {
-
-    height:150px;
+.portrait{
+    height:180px;
+    border:2px solid white;
+    background:black;
     display:flex;
     justify-content:center;
     align-items:center;
-    font-size:12px;
+}
+.character-sprite{
+
+    width:140px;
+    height:140px;
+    image-rendering: pixelated;
+
+    object-fit: contain;
 
 }
 
 .character-info{
 
-    padding:20px;
+    padding:10px;
 
 }
 
