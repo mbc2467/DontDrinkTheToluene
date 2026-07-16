@@ -345,3 +345,42 @@ button:hover:not(:disabled) {
     cursor:not-allowed;
 
 }
+
+.chemical-grid{
+
+    display:grid;
+
+    grid-template-columns:repeat(3,1fr);
+
+    gap:15px;
+
+    margin:30px 0;
+
+}
+.chemical-grid{
+
+    display:grid;
+
+    grid-template-columns:repeat(3,1fr);
+
+    gap:15px;
+
+    margin:30px 0;
+
+}
+.chemical-card:hover{
+
+    background:white;
+
+    color:black;
+
+}
+.chemical-card.selected{
+
+    background:var(--green);
+
+    border-color:var(--green);
+
+    color:black;
+
+}
