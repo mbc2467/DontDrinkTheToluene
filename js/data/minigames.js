@@ -9,16 +9,16 @@ export const minigames = [
     },
 
     {
-        id: "ls",
-        title: "LIGHT SCATTERING",
+        id: "sec",
+        title: "CLEAN THE SEC - coming soon",
         code: "EXP-02",
         status: "LOCKED",
         unlocked: false
     },
 
     {
-        id: "sec",
-        title: "REPACK THE SEC",
+        id: "ls",
+        title: "coming soon",
         code: "EXP-03",
         status: "LOCKED",
         unlocked: false
@@ -26,7 +26,7 @@ export const minigames = [
 
     {
         id: "iec",
-        title: "RUN THE IEC",
+        title: "coming soon",
         code: "EXP-04",
         status: "LOCKED",
         unlocked: false

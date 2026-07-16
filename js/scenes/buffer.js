@@ -1,10 +1,14 @@
-import { showScene, goBack } from "../engine/sceneManager.js";
+import { showScene } from "../engine/sceneManager.js";
 
 import { buffers } from "../data/buffers.js";
 import { chemicals } from "../data/chemicals.js";
 
 import { showToluenePrompt } from "./toluenePrompt.js";
 import { showTolueneGameOver } from "./tolueneGameOver.js";
+
+import { unlockGame } from "../engine/gameState.js";
+import { setScene } from "../engine/sceneManager.js";
+import { showMenu } from "./menu.js";
 
 let currentBuffer = null;
 let selectedChemicals = [];
@@ -103,7 +107,11 @@ export function showBufferGame() {
     document.getElementById("selectedCount").textContent = `Selected: ${selectedChemicals.length}`;
     document.getElementById("finishButton").addEventListener("click", finishBufferGame);
 
-    document.getElementById("backButton").addEventListener("click", goBack);
+    document
+        .getElementById("backButton")
+        .addEventListener("click", () => {
+            setScene(showMenu);
+        });
 }
 
 function randomBuffer() {
@@ -168,7 +176,7 @@ function showBufferWin() {
         </div>
 
     `);
-
+    unlockGame("sec");
     document
         .getElementById("menuButton")
         .addEventListener("click", goBack);

@@ -2,6 +2,7 @@ import { showScene, setScene } from "../engine/sceneManager.js";
 import { characters } from "../data/characters.js";
 import { showMenu } from "./menu.js";
 import { setCharacter } from "../engine/gameState.js";
+import { showTitle } from "./title.js";
 
 let selectedCharacter = null;
 
@@ -47,11 +48,12 @@ export function showCharacterSelect() {
     html += `
 
         </div>
-
+        <div class="navigation">
+        <button id="backButton">
+        BACK
+        </button>
         <button id="nextButton" disabled>
-
             Next
-
         </button>
 
         </div>
@@ -86,6 +88,11 @@ export function showCharacterSelect() {
         .getElementById("nextButton")
         .addEventListener("click", () => {
             setScene(showMenu);
+        });
+    document
+        .getElementById("backButton")
+        .addEventListener("click", () => {
+            setScene(showTitle);
         });
 
 }

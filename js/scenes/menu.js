@@ -1,12 +1,16 @@
 import { minigames } from "../data/minigames.js";
 import { getCharacter } from "../engine/gameState.js";
-import { setScene, showScene, goBack, goHome } from "../engine/sceneManager.js";
+import { showScene} from "../engine/sceneManager.js";
+import { showTitle } from "./title.js";
+
+import { setScene } from "../engine/sceneManager.js";
+import { showCharacterSelect } from "./characterSelect.js";
 
 import { showBufferGame } from "./buffer.js";
 import { showGlasswareGame } from "./glassware.js";
 
 function createExperimentCard(game) {
-
+    console.log("Creating experiment card");
     return `
         <div
             class="experiment-card ${game.unlocked ? "" : "locked"}"
@@ -72,11 +76,16 @@ export function showMenu() {
 
     document
         .getElementById("backButton")
-        .addEventListener("click", goBack);
+        .addEventListener("click", () => {
+            setScene(showCharacterSelect);
+            console.log("Back button clicked");
+        });
 
     document
         .getElementById("homeButton")
-        .addEventListener("click", goHome);
+        .addEventListener("click", () => {
+            setScene(showTitle);
+        });
 
     document
         .querySelectorAll(".experiment-card")
@@ -90,35 +99,23 @@ export function showMenu() {
                 const id = card.dataset.id;
 
                 switch (id) {
-
                     case "buffer":
-
                         if (getCharacter() === "michael") {
-
                             setScene(showGlasswareGame);
-
                         } else {
-
                             setScene(showBufferGame);
-
                         }
-
                         break;
-
                     // Future minigames
-
                     case "ls":
                         console.log("Light Scattering");
                         break;
-
                     case "sec":
                         console.log("SEC");
                         break;
-
                     case "iec":
                         console.log("IEC");
                         break;
-
                 }
 
             });

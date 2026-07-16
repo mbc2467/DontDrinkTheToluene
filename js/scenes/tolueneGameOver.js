@@ -1,4 +1,6 @@
-import { showScene, goHome } from "../engine/sceneManager.js";
+import { showScene} from "../engine/sceneManager.js";
+import { showTitle } from "./title.js";
+import { setScene } from "../engine/sceneManager.js";
 
 export function showTolueneGameOver() {
 
@@ -18,7 +20,7 @@ export function showTolueneGameOver() {
 
                 <p>
 
-                    Why would you do that?
+                    You are dead, but more importantly, Dr. Thurston is disappointed in you.
 
                 </p>
 
@@ -36,6 +38,8 @@ export function showTolueneGameOver() {
 
     document
         .getElementById("homeButton")
-        .addEventListener("click", goHome);
+        .addEventListener("click", () => {
+            setScene(showTitle);
+        });
 
 }
