@@ -10,6 +10,9 @@ export function showCredits(){
                 <p class="subtitle">
                     Created by: Mallory
                 </p>
+                <p class="subtitle">
+                    This game would not be possible without Nishi, Michael, Malcolm, and Dr. Thurston.
+                </p>
                 <div class="navigation">
                     <button id="backButton">
                     BACK

@@ -461,3 +461,49 @@ button:hover:not(:disabled) {
     transform:scale(1.2);
 
 }
+
+.gameover-panel{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    gap:40px;
+
+}
+
+.gameover-text{
+
+    flex:1;
+
+}
+
+.gameover-message{
+
+    margin:30px 0;
+
+    line-height:1.6;
+
+}
+
+.gameover-image{
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+}
+
+.thurston-sprite{
+
+    width:220px;
+
+    image-rendering:pixelated;
+
+    object-fit:contain;
+
+}
