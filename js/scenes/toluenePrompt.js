@@ -1,5 +1,7 @@
 import { showScene } from "../engine/sceneManager.js";
 import { showTolueneGameOver } from "./tolueneGameOver.js";
+import { showTitle } from "./title.js";
+import { setScene } from "../engine/sceneManager.js";
 
 let funnyPrompts = [
     "This bottle looks interesting.",
@@ -7,7 +9,7 @@ let funnyPrompts = [
     "This bottle has a skull and crossbones on it.",
     "Malcolm says this bottle is totally safe to drink.",
     "Dr. Thurston gives you a stern look",
-    "Dr. Thurston makes up the acronym DDTT but you don't know what it means.",
+    "Dr. Thurston says 'DDTT' but you don't know what it means.",
 ]
 
 export function showToluenePrompt(onYes, onNo) {
@@ -42,7 +44,7 @@ export function showToluenePrompt(onYes, onNo) {
 
         overlay.remove();
 
-        onYes();
+        setScene(showTolueneGameOver);
 
     };
 

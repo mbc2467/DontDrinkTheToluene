@@ -1,5 +1,7 @@
 import { minigames } from "../data/minigames.js";
 
+export const DEBUG = true;
+
 let state = {
 
     character: null,
@@ -13,20 +15,33 @@ let state = {
 };
 
 let unlockedGames = ["buffer"];
+if (DEBUG) {
+
+    minigames.forEach(game => {
+
+        game.unlocked = true;
+        game.status = "READY";
+
+    });
+
+}
 
 export function isUnlocked(id) {
-    return unlockedGames.includes(id);
+    return state.unlockedGames.includes(id);
 }
 
 export function unlockGame(id) {
-    if (!unlockedGames.includes(id)) {
-        unlockedGames.push(id);
+    if (DEBUG) return;
+    
+    if (!state.unlockedGames.includes(id)) {
+        state.unlockedGames.push(id);
     }
     const game = minigames.find(game => game.id === id);
     if (game) {
         game.unlocked = true;
         game.status = "READY";
     }
+
 }
 
 export function getState() {
