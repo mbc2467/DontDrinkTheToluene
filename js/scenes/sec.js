@@ -532,7 +532,7 @@ function checkConnections() {
 
     if (solved) {
 
-        unlockGame("ls");
+        unlockGame("cf");
 
         document.querySelector(".navigation").innerHTML = `
             <button id="menuButton">
@@ -575,7 +575,7 @@ function showSECWin() {
         </div>
 
     `);
-    unlockGame("ls");
+    unlockGame("cf");
     document
         .getElementById("menuButton")
         .addEventListener("click", () => setScene(showMenu));

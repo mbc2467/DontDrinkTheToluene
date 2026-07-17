@@ -17,8 +17,8 @@ export const minigames = [
     },
 
     {
-        id: "ls",
-        title: "LIGHT SCATTERING - coming soon",
+        id: "cf",
+        title: "COLLECT FRACTIONS - coming soon",
         code: "EXP-03",
         status: "LOCKED",
         unlocked: false

@@ -707,3 +707,30 @@ button:hover:not(:disabled) {
     background:black;
 
 }
+
+.fraction-tube{
+
+    position:absolute;
+
+    width:36px;
+
+    height:56px;
+
+    border:3px solid white;
+
+    background:black;
+
+    color:white;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    font-weight:bold;
+
+    cursor:pointer;
+
+    border-radius:0 0 10px 10px;
+}

@@ -8,6 +8,7 @@ import { showCharacterSelect } from "./characterSelect.js";
 
 import { showBufferGame } from "./buffer.js";
 import { showGlasswareGame } from "./glassware.js";
+import { showFractionsGame } from "./fractions.js";
 
 import { showSECGame } from "./sec.js";
 
@@ -112,8 +113,8 @@ export function showMenu() {
                     case "sec":
                         setScene(showSECGame);
                         break;
-                    case "ls":
-                        console.log("Light Scattering");
+                    case "cf":
+                        setScene(showFractionsGame);
                         break;
                     case "iec":
                         console.log("IEC");
