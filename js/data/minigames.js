@@ -10,7 +10,7 @@ export const minigames = [
 
     {
         id: "sec",
-        title: "CLEAN THE SEC - coming soon",
+        title: "CLEAN THE SEC",
         code: "EXP-02",
         status: "LOCKED",
         unlocked: false
@@ -18,7 +18,7 @@ export const minigames = [
 
     {
         id: "ls",
-        title: "coming soon",
+        title: "LIGHT SCATTERING - coming soon",
         code: "EXP-03",
         status: "LOCKED",
         unlocked: false

@@ -554,17 +554,22 @@ button:hover:not(:disabled) {
     top:70px;
 }
 
-#pump{
+/* was #pump - this is the slot PUMP used to live in permanently.
+   Whichever component (pump/column/uv) gets shuffled here each
+   round, it renders in this spot with left/right ports. */
+#slotA{
     left: 150px;
     top:165px;
 }
 
-#column{
+/* was #column - top/bottom ports */
+#slotB{
     left:300px;
     top:70px;
 }
 
-#uv{
+/* was #uv - left/right ports */
+#slotC{
     left:450px;
     top:165px;
 }
@@ -578,21 +583,27 @@ button:hover:not(:disabled) {
 
     position:absolute;
 
-    width:14px;
+    width:18px;
+    height:18px;
 
-    height:14px;
-
-    background:white;
+    border:3px solid white;
 
     border-radius:50%;
 
-    right:-8px;
-
-    top:50%;
-
-    transform:translateY(-50%);
+    box-sizing:border-box;
 
 }
+.port.in{
+
+    background:black;
+
+}
+.port.out{
+
+    background:white;
+
+}
+
 .port.left{
 
     left:-8px;
@@ -642,17 +653,57 @@ button:hover:not(:disabled) {
 }
 
 .tube{
-
     fill:none;
-
     stroke:white;
-
     stroke-width:4;
+}
 
+.tube.correct{
+    stroke:#00ff66;
+}
+
+.tube.incorrect{
+    stroke:#ff3333;
 }
 
 .selected-port{
 
+    border-color:#00ff66;
     background:#00ff66;
+
+}
+.port.correct{
+
+    border-color:#00ff66;
+
+}
+
+.port.out.correct{
+
+    background:#00ff66;
+
+}
+
+.port.in.correct{
+
+    background:black;
+
+}
+
+.port.incorrect{
+
+    border-color:#ff3333;
+
+}
+
+.port.out.incorrect{
+
+    background:#ff3333;
+
+}
+
+.port.in.incorrect{
+
+    background:black;
 
 }
