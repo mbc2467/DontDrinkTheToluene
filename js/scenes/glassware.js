@@ -6,6 +6,7 @@ import { showToluenePrompt } from "./toluenePrompt.js";
 import { showTolueneGameOver } from "./tolueneGameOver.js";
 
 import { dirtyGlassSprites } from "../data/sprites.js";
+import { tolueneSprite } from "../data/sprites.js";
 
 export function showGlasswareGame() {
 
@@ -63,7 +64,18 @@ export function showGlasswareGame() {
 
         });
 
-    spawnObject();
+        spawnObject();
+
+        let spawnDelay = 800;
+
+        const spawnInterval = setInterval(() => {
+
+            spawnObject();
+
+            if (spawnDelay > 350)
+                spawnDelay -= 20;
+
+        }, spawnDelay);
 
     interval = setInterval(() => {
 
@@ -75,7 +87,6 @@ export function showGlasswareGame() {
         if (time <= 0) {
 
             clearInterval(interval);
-
             loseGame();
 
         }
@@ -89,92 +100,57 @@ export function showGlasswareGame() {
         object.style.left = Math.random() * 85 + "%";
         object.style.top = Math.random() * 75 + "%";
 
-        // 10% chance of spawning ping pong ball
-        const isPingPongBall = Math.random() < 0.10;
-        if (isPingPongBall) {
-            object.className = "glass ping-pong-ball"; 
-            object.textContent = "🏓";
+        // 10% chance of spawning toluene
+        const isToluene = Math.random() < 0.10;
+        if (isToluene) {
+            object.className = "glass toluene";
+            object.innerHTML =`<img src="${tolueneSprite}" alt="Toluene">`;
             object.title = "Toluene";
             object.addEventListener("click", () => {
-                    cleaned--;
-
-                    document.getElementById("score").textContent =
-                        `Cleaned: ${cleaned} / 10`;
-
-                    object.remove();
-
-                    if (cleaned >= 10) {
-
+                showToluenePrompt(
+                    () => {
                         clearInterval(interval);
-
-                        winGame();
-
+                        clearInterval(spawnInterval);
+                        showTolueneGameOver();
+                    },
+                    () => {
+                        // Remove the bottle without affecting score.
+                        object.remove();
+                        //spawnObject();
                     }
-
-                    else {
-
-                        spawnObject();
-
-                    }
+                );
             });
         }
         else {
-            // 10% chance of spawning toluene
-            const isToluene = Math.random() < 0.10;
-            if (isToluene) {
-                object.className = "glass toluene";
-                object.textContent = "🧴";
-                object.title = "Toluene";
-                object.addEventListener("click", () => {
-                    showToluenePrompt(
-                        () => {
-                            clearInterval(interval);
-                            showTolueneGameOver();
-                        },
-                        () => {
-                            // Remove the bottle without affecting score.
-                            object.remove();
-                            spawnObject();
-                        }
-                    );
-                });
-            }
-            else {
 
-                object.className = "glass";
+            object.className = "glass";
 
-                const img = document.createElement("img");
-                img.src = randomGlassSprite();
-                object.appendChild(img);
+            const img = document.createElement("img");
+            img.src = randomGlassSprite();
+            object.appendChild(img);
 
-                object.title = "Dirty Glassware";
+            object.title = "Dirty Glassware";
 
-                object.addEventListener("click", () => {
+            object.addEventListener("click", () => {
 
-                    cleaned++;
+                cleaned++;
 
-                    document.getElementById("score").textContent =
-                        `Cleaned: ${cleaned} / 10`;
+                document.getElementById("score").textContent =
+                    `Cleaned: ${cleaned} / 10`;
 
-                    object.remove();
+                object.remove();
 
-                    if (cleaned >= 10) {
+                if (cleaned >= 10) {
 
-                        clearInterval(interval);
+                    clearInterval(interval);
+                    clearInterval(spawnInterval);
 
-                        winGame();
+                    winGame();
 
-                    }
+                }
 
-                    else {
+            });
 
-                        spawnObject();
-
-                    }
-
-                });
-
-            }
         }
 
         area.appendChild(object);

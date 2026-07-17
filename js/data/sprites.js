@@ -21,5 +21,5 @@ export const fractionSprites = [
 
 ];
 
-export const tolueneSprite = [];
+export const tolueneSprite = "assets/images/TOLUENE.png";
     
