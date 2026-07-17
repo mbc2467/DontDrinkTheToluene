@@ -507,7 +507,11 @@ button:hover:not(:disabled) {
     object-fit:contain;
 
 }
-
+.toluene-sprite {
+    width:100px;
+    image-rendering:pixelated;
+    object-fit:contain;
+}
 .sec-board{
 
     width:100%;

@@ -2,6 +2,7 @@ import { showScene } from "../engine/sceneManager.js";
 import { showTolueneGameOver } from "./tolueneGameOver.js";
 import { showTitle } from "./title.js";
 import { setScene } from "../engine/sceneManager.js";
+import { tolueneSprite } from "../data/sprites.js";
 
 let funnyPrompts = [
     "This bottle looks interesting.",
@@ -34,6 +35,11 @@ export function showToluenePrompt(onYes, onNo) {
                 <button id="noButton">NO</button>
 
             </div>
+
+            <img
+                src="assets/images/TOLUENE.png"
+                alt="toluene"
+                class="toluene-sprite">
 
         </div>
     `;

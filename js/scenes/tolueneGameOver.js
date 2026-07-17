@@ -16,7 +16,7 @@ export function showTolueneGameOver() {
                         YOU DRANK THE TOLUENE.
                     </h2>
                     <p class="gameover-message">
-                        Dr. Thurston nods with approval and you are awarded your PhD on the spot. Against all known laws of chemistry, the toluene grants you complete mastery of protein science and your next paper is accepted into Nature before you've even written it.
+                        Dr. Thurston nods with approval and you are awarded your PhD on the spot. Against all known laws of chemistry, the toluene grants you complete mastery of protein science and your next paper is accepted into Nature before you've even written it. The spirit of Carl Sagan emerges and announces you have unlimited beamtime at CHESS.
                     </p>
                     <button id="homeButton">
                         MAIN MENU
