@@ -5,6 +5,8 @@ import { showMenu } from "./menu.js";
 import { showToluenePrompt } from "./toluenePrompt.js";
 import { showTolueneGameOver } from "./tolueneGameOver.js";
 
+import { dirtyGlassSprites } from "../data/sprites.js";
+
 export function showGlasswareGame() {
 
     let cleaned = 0;
@@ -141,7 +143,9 @@ export function showGlasswareGame() {
 
                 object.className = "glass";
 
-                object.textContent = "🧪";
+                const img = document.createElement("img");
+                img.src = randomGlassSprite();
+                object.appendChild(img);
 
                 object.title = "Dirty Glassware";
 
@@ -236,5 +240,13 @@ export function showGlasswareGame() {
             .addEventListener("click", showGlasswareGame);
 
     }
+
+}
+
+function randomGlassSprite(){
+
+    return dirtyGlassSprites[
+        Math.floor(Math.random()*dirtyGlassSprites.length)
+    ];
 
 }
