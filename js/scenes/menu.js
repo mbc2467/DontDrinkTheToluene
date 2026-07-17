@@ -9,6 +9,8 @@ import { showCharacterSelect } from "./characterSelect.js";
 import { showBufferGame } from "./buffer.js";
 import { showGlasswareGame } from "./glassware.js";
 
+import { showSECGame } from "./sec.js";
+
 function createExperimentCard(game) {
     console.log("Creating experiment card");
     return `
@@ -107,11 +109,11 @@ export function showMenu() {
                         }
                         break;
                     // Future minigames
+                    case "sec":
+                        setScene(showSECGame);
+                        break;
                     case "ls":
                         console.log("Light Scattering");
-                        break;
-                    case "sec":
-                        console.log("SEC");
                         break;
                     case "iec":
                         console.log("IEC");
