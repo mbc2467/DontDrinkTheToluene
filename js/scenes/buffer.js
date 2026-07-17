@@ -9,6 +9,7 @@ import { showTolueneGameOver } from "./tolueneGameOver.js";
 import { unlockGame } from "../engine/gameState.js";
 import { setScene } from "../engine/sceneManager.js";
 import { showMenu } from "./menu.js";
+import { showTitle } from "./title.js";
 
 let currentBuffer = null;
 let selectedChemicals = [];
@@ -179,7 +180,7 @@ function showBufferWin() {
     unlockGame("sec");
     document
         .getElementById("menuButton")
-        .addEventListener("click", goBack);
+        .addEventListener("click", () => setScene(showMenu));
 
 }
 

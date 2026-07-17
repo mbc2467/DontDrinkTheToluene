@@ -10,7 +10,7 @@ export const buffers = [
         ingredients: [
 
             "Glacial Acetic Acid",
-            "Sodium Hydroxide",
+            "NaOH",
             "Sodium Benzoate"
 
         ]
