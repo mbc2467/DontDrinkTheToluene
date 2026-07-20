@@ -15,11 +15,7 @@ export const dirtyGlassSprites = [
     "assets/images/emptyGlassware/tile035.png",
 ];
 
-export const fractionSprites = [
-
-    
-
-];
+export const fractionSprite = "assets/images/fraction.png";
 
 export const tolueneSprite = "assets/images/TOLUENE.png";
     

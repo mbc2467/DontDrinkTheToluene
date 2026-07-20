@@ -712,31 +712,24 @@ button:hover:not(:disabled) {
 
 }
 
-.fraction-tube{
+.fraction-tube {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    pointer-events: auto;
+    cursor: pointer;
+}
 
-    position:absolute;
+.fraction-sprite-img {
+    width: 40px;
+    height: 40px;
+    pointer-events: none;
+}
 
-    width:36px;
-
-    height:56px;
-
-    border:3px solid white;
-
-    background:black;
-
-    color:white;
-
-    display:flex;
-
-    justify-content:center;
-
-    align-items:center;
-
-    font-weight:bold;
-
-    cursor:pointer;
-
-    border-radius:0 0 10px 10px;
+.fraction-label {
+    font-size: 14px;
+    margin-top: 2px;
+    pointer-events: none;
 }
 
 .glass {
@@ -754,4 +747,9 @@ button:hover:not(:disabled) {
     object-fit: contain;
 
     image-rendering: pixelated;
+}
+
+.green-text {
+    color: #00ff66;
+    font-weight: bold;
 }

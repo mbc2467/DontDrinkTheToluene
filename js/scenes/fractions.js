@@ -1,11 +1,20 @@
 import { showScene, setScene } from "../engine/sceneManager.js";
 import { showMenu } from "./menu.js";
 import { unlockGame } from "../engine/gameState.js";
-import { tolueneSprite } from "../data/sprites.js";
+import { fractionSprite } from "../data/sprites.js";
 
-const TOTAL_TUBES = 14;
+const TOTAL_TUBES = 18;
 const SPAWN_INTERVAL_MS = 900;
-const TUBE_SPEED = 2.5;
+const TUBE_SPEED = 1.0;
+
+// bounds for the numbers that can appear at all, and how big the
+// "collect this range" target window can be on any given run
+const RANGE_MIN = 0;
+const RANGE_MAX = 16;
+const MIN_TARGET_SIZE = 4;
+const MAX_TARGET_SIZE = 6;
+
+const GAME_AREA_HEIGHT = 180;
 
 let tubes = [];
 let spawnQueue = [];
@@ -23,6 +32,18 @@ let targetsTotal = 0;
 
 let gameOver = false;
 
+function pickTargetRange() {
+
+    const size = Math.floor(Math.random() * (MAX_TARGET_SIZE - MIN_TARGET_SIZE + 1)) + MIN_TARGET_SIZE;
+
+    // keep the whole window inside [RANGE_MIN, RANGE_MAX]
+    const maxStart = RANGE_MAX - (size - 1);
+    const start = Math.floor(Math.random() * (maxStart - RANGE_MIN + 1)) + RANGE_MIN;
+
+    return { start, end: start + size - 1 };
+
+}
+
 export function showFractionsGame() {
 
     // reset all per-run state - showFractionsGame can be called again
@@ -34,6 +55,10 @@ export function showFractionsGame() {
     targetsCollected = 0;
     gameOver = false;
 
+    const { start, end } = pickTargetRange();
+    targetStart = start;
+    targetEnd = end;
+
     const targets = [];
 
     for (let n = targetStart; n <= targetEnd; n++) {
@@ -42,18 +67,21 @@ export function showFractionsGame() {
 
     targetsTotal = targets.length;
 
-    const decoyCount = Math.max(TOTAL_TUBES - targets.length, 0);
-    const decoys = [];
+    // build the decoy pool from every number in range that ISN'T a target,
+    // then shuffle and slice - avoids duplicate decoys and avoids the
+    // unbounded retry loop the old "keep rolling until it's outside the
+    // range" approach could hit
+    const decoyPool = [];
 
-    while (decoys.length < decoyCount) {
-
-        const n = Math.floor(Math.random() * 25) + 1;
-
+    for (let n = RANGE_MIN; n <= RANGE_MAX; n++) {
         if (n < targetStart || n > targetEnd) {
-            decoys.push(n);
+            decoyPool.push(n);
         }
-
     }
+
+    const shuffledDecoyPool = shuffled(decoyPool);
+    const decoyCount = Math.min(Math.max(TOTAL_TUBES - targets.length, 0), shuffledDecoyPool.length);
+    const decoys = shuffledDecoyPool.slice(0, decoyCount);
 
     spawnQueue = shuffled([...targets, ...decoys]);
 
@@ -64,7 +92,10 @@ export function showFractionsGame() {
     <h1>COLLECT FRACTIONS</h1>
 
     <p class="subtitle">
-        Collect every fraction between ${targetStart} and ${targetEnd}.
+        Collect every fraction between
+        <span class="green-text">${targetStart}</span>
+        and
+        <span class="green-text">${targetEnd}</span>.
         Leave the rest.
     </p>
 
@@ -86,6 +117,18 @@ export function showFractionsGame() {
     `;
 
     showScene(html);
+
+    // #fractionArea needs to be its own contained game space: a
+    // positioned, clipped box so the absolutely-positioned tubes are
+    // constrained to it instead of escaping to whatever positioned
+    // ancestor the browser finds further up the tree.
+    const fractionArea = document.getElementById("fractionArea");
+
+    if (fractionArea) {
+        fractionArea.style.position = "relative";
+        fractionArea.style.overflow = "hidden";
+        fractionArea.style.height = GAME_AREA_HEIGHT + "px";
+    }
 
     document
         .getElementById("backButton")
@@ -147,9 +190,22 @@ function spawnTube() {
     const tube = document.createElement("div");
 
     tube.className = "fraction-tube";
-    tube.textContent = number;
+    tube.style.position = "absolute";
     tube.style.left = "-40px";
-    tube.style.top = (40 + Math.random() * 180) + "px";
+    tube.style.top = (40 + Math.random() * (GAME_AREA_HEIGHT - 60)) + "px";
+
+    const img = document.createElement("img");
+    img.src = fractionSprite;
+    img.className = "fraction-sprite-img";
+    img.alt = "";
+    img.draggable = false;
+
+    const label = document.createElement("span");
+    label.className = "fraction-label";
+    label.textContent = number;
+
+    tube.appendChild(img);
+    tube.appendChild(label);
 
     const entry = {
         element: tube,
