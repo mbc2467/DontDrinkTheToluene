@@ -788,3 +788,300 @@ button:hover:not(:disabled) {
     color: #00ff66;
     font-weight: bold;
 }
+
+/* ===== Centrifuge Balancing Game ===== */
+
+.centrifuge-message {
+    text-align: center;
+    font-weight: bold;
+    color: var(--red);
+    min-height: 1.5em;
+    margin: 8px 0;
+}
+
+.centrifuge-layout {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    width: 100%;
+    margin: 0px 0;
+}
+
+.rotor-column {
+    flex: 0 0 auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.tray-column {
+    flex: 1 1 auto;
+    display: flex;
+    justify-content: center;
+    min-width: 160px;
+}
+
+.scale-column {
+    flex: 0 0 auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* --- Rotor disc (pixel-art bitmap built from divs) --- */
+
+.rotor-disc {
+    position: relative;
+    flex-shrink: 0;
+}
+
+.rotor-pixel {
+    position: absolute;
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+}
+
+.rotor-pixel-band-0 {
+    background-color: #b8bcc2;
+}
+
+.rotor-pixel-band-1 {
+    background-color: #9aa0a8;
+}
+
+.rotor-pixel-band-2 {
+    background-color: #7c828a;
+}
+
+.rotor-pixel-band-3 {
+    background-color: #5d6167;
+}
+
+.rotor-slot-layer {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+}
+
+.rotor-slot {
+    position: absolute;
+    box-sizing: border-box;
+    border: 2px solid white;
+    background: black;
+    border-radius: 0px;
+    pointer-events: auto;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /*transition: border-color 0.15s ease, background-color 0.15s ease;*/
+}
+
+.rotor-slot:hover {
+    border: 4px solid white;
+}
+
+.rotor-slot.slot-correct {
+    border-color: var(--green);
+    background: var(--green);
+}
+
+.rotor-slot.slot-incorrect {
+    border-color: var(--red);
+    background: var(--red);
+}
+
+/* --- Tube items (shared by tray, rotor slots, and scale) --- */
+
+.tube-tray {
+    display: flex;
+    flex-wrap: wrap;
+    align-content: flex-start;
+    justify-content: center;
+    gap: 10px;
+    min-height: 110px;
+    width: 100%;
+    padding: 10px;
+    border: 4px white;
+    border-radius: 0px;
+    cursor: pointer;
+}
+
+.tube-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+    user-select: none;
+}
+
+.tube-tray .tube-item {
+    width: 44px;
+    height: 64px;
+}
+
+.tube-selected {
+    border:4px solid white;
+    /*filter: drop-shadow(0 0 6px #ffd54a) drop-shadow(0 0 6px #ffd54a);
+    transform: scale(1.08);*/
+}
+
+.tube-vial {
+    width: 18px;
+    height: 30px;
+    background: linear-gradient(to bottom, #7fd0e8 0%, #4fa8c9 100%);
+    border: 1px solid #2f7a94;
+    border-radius: 3px 3px 8px 8px;
+}
+
+.toluene-tube .tube-sprite-img {
+    width: 22px;
+    height: 34px;
+    object-fit: contain;
+}
+
+.tube-label {
+    margin-top: 4px;
+    font-size: 10px;
+    line-height: 1.1;
+    text-align: center;
+    color: #eee;
+    max-width: 52px;
+    word-break: break-word;
+}
+
+/* --- Scale --- */
+
+.scale-housing {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    padding: 14px;
+    background: #2b2f36;
+    border: 2px solid #555;
+    border-radius: 6px;
+}
+
+.scale-plate {
+    width: 90px;
+    height: 90px;
+    background: #45494f;
+    border: 2px solid #6b7078;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.scale-plate .tube-item {
+    width: 44px;
+    height: 64px;
+}
+
+.scale-display {
+    width: 100px;
+    padding: 6px 4px;
+    background: #0d1a10;
+    border: 1px solid #1f3a24;
+    border-radius: 3px;
+    color: #6dffa0;
+    font-family: 'Courier New', monospace;
+    font-size: 15px;
+    font-weight: bold;
+    text-align: center;
+    letter-spacing: 1px;
+}
+
+/* --- Spin button --- */
+
+.spin-button {
+    font-weight: bold;
+    letter-spacing: 1px;
+}
+
+.spin-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* --- Animations --- */
+
+@keyframes rotor-spin-success {
+    0% {
+        transform: rotate(0deg);
+        animation-timing-function: ease-in;
+    }
+    60% {
+        transform: rotate(1080deg);
+        animation-timing-function: ease-out;
+    }
+    100% {
+        transform: rotate(1440deg);
+    }
+}
+
+.rotor-disc.spin-success {
+    animation: rotor-spin-success 1.6s forwards;
+}
+
+@keyframes rotor-shake {
+    0%, 100% {
+        transform: translate(0, 0);
+    }
+    10% {
+        transform: translate(calc(var(--shake-magnitude, 8px) * -1), calc(var(--shake-magnitude, 8px) * 0.5));
+    }
+    20% {
+        transform: translate(var(--shake-magnitude, 8px), calc(var(--shake-magnitude, 8px) * -0.5));
+    }
+    30% {
+        transform: translate(calc(var(--shake-magnitude, 8px) * -0.8), calc(var(--shake-magnitude, 8px) * -0.8));
+    }
+    40% {
+        transform: translate(var(--shake-magnitude, 8px), var(--shake-magnitude, 8px));
+    }
+    50% {
+        transform: translate(calc(var(--shake-magnitude, 8px) * -0.6), calc(var(--shake-magnitude, 8px) * 0.6));
+    }
+    60% {
+        transform: translate(var(--shake-magnitude, 8px), calc(var(--shake-magnitude, 8px) * -0.4));
+    }
+    70% {
+        transform: translate(calc(var(--shake-magnitude, 8px) * -0.9), calc(var(--shake-magnitude, 8px) * -0.3));
+    }
+    80% {
+        transform: translate(calc(var(--shake-magnitude, 8px) * 0.7), var(--shake-magnitude, 8px));
+    }
+    90% {
+        transform: translate(calc(var(--shake-magnitude, 8px) * -0.4), calc(var(--shake-magnitude, 8px) * -0.6));
+    }
+}
+
+.rotor-disc.shake {
+    animation: rotor-shake 0.12s linear infinite;
+}
+
+@keyframes panel-jitter {
+    0%, 100% {
+        transform: translate(0, 0);
+    }
+    25% {
+        transform: translate(var(--shake-magnitude, 3px), calc(var(--shake-magnitude, 3px) * -1));
+    }
+    50% {
+        transform: translate(calc(var(--shake-magnitude, 3px) * -1), var(--shake-magnitude, 3px));
+    }
+    75% {
+        transform: translate(var(--shake-magnitude, 3px), var(--shake-magnitude, 3px));
+    }
+}
+
+#centrifugePanel.jitter {
+    animation: panel-jitter 0.1s linear infinite;
+}

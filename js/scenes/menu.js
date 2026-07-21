@@ -9,6 +9,7 @@ import { showCharacterSelect } from "./characterSelect.js";
 import { showBufferGame } from "./buffer.js";
 import { showGlasswareGame } from "./glassware.js";
 import { showFractionsGame } from "./fractions.js";
+import { showCentrifugeGame } from "./centrifuge.js";
 
 import { showSECGame } from "./sec.js";
 
@@ -61,11 +62,11 @@ export function showMenu() {
                 <div class="navigation">
 
                     <button id="backButton">
-                        < BACK
+                        BACK
                     </button>
 
                     <button id="homeButton">
-                        HOME >
+                        HOME
                     </button>
 
                 </div>
@@ -109,7 +110,6 @@ export function showMenu() {
                             setScene(showBufferGame);
                         }
                         break;
-                    // Future minigames
                     case "sec":
                         setScene(showSECGame);
                         break;
@@ -117,7 +117,7 @@ export function showMenu() {
                         setScene(showFractionsGame);
                         break;
                     case "centrifuge":
-                        console.log("CENTRIFUGE MINIGAME");
+                        setScene(showCentrifugeGame);
                         break;
                 }
 

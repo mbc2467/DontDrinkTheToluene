@@ -439,7 +439,7 @@ function showResult(passed) {
     showScene(html);
 
     if (passed) {
-        unlockGame("fractions");
+        unlockGame("centrifuge");
     } else {
 
         document

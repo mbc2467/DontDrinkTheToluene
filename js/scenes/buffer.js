@@ -60,7 +60,7 @@ export function showBufferGame() {
     BACK
     </button>
     <button id="finishButton">
-    FINISH
+    DEGAS
     </button>
     </div>
     </div>
