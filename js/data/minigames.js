@@ -17,16 +17,16 @@ export const minigames = [
     },
 
     {
-        id: "cf",
-        title: "COLLECT FRACTIONS - coming soon",
+        id: "fractions",
+        title: "COLLECT FRACTIONS",
         code: "EXP-03",
         status: "LOCKED",
         unlocked: false
     },
 
     {
-        id: "iec",
-        title: "coming soon",
+        id: "centrifuge",
+        title: "BALANCE CENTRIFUGE",
         code: "EXP-04",
         status: "LOCKED",
         unlocked: false

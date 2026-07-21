@@ -113,11 +113,11 @@ export function showMenu() {
                     case "sec":
                         setScene(showSECGame);
                         break;
-                    case "cf":
+                    case "fractions":
                         setScene(showFractionsGame);
                         break;
-                    case "iec":
-                        console.log("IEC");
+                    case "centrifuge":
+                        console.log("CENTRIFUGE MINIGAME");
                         break;
                 }
 

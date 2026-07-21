@@ -1,7 +1,10 @@
 import { showScene, setScene } from "../engine/sceneManager.js";
 import { showMenu } from "./menu.js";
 import { unlockGame } from "../engine/gameState.js";
-import { fractionSprite } from "../data/sprites.js";
+import { fractionSprite, tolueneSprite } from "../data/sprites.js";
+
+import { showToluenePrompt } from "./toluenePrompt.js";
+import { showTolueneGameOver } from "./tolueneGameOver.js";
 
 const TOTAL_TUBES = 18;
 const SPAWN_INTERVAL_MS = 900;
@@ -14,6 +17,10 @@ const RANGE_MAX = 16;
 const MIN_TARGET_SIZE = 4;
 const MAX_TARGET_SIZE = 6;
 const GAME_AREA_HEIGHT = 120;
+
+// sentinel value dropped into spawnQueue alongside the numeric tubes -
+// distinguishable from any real fraction because those are always numbers
+const TOLUENE_MARKER = "TOL";
 
 let tubes = [];
 let spawnQueue = [];
@@ -30,6 +37,7 @@ let targetsCollected = 0;
 let targetsTotal = 0;
 
 let gameOver = false;
+let paused = false;
 
 function pickTargetRange() {
 
@@ -59,6 +67,7 @@ export function showFractionsGame() {
     mistakes = 0;
     targetsCollected = 0;
     gameOver = false;
+    paused = false;
 
     const { start, end } = pickTargetRange();
     targetStart = start;
@@ -85,10 +94,16 @@ export function showFractionsGame() {
     }
 
     const shuffledDecoyPool = shuffled(decoyPool);
-    const decoyCount = Math.min(Math.max(TOTAL_TUBES - targets.length, 0), shuffledDecoyPool.length);
+
+    // reserve one slot out of TOTAL_TUBES for the toluene tube so the
+    // overall tube count on screen doesn't creep up
+    const decoyBudget = Math.max(TOTAL_TUBES - targets.length - 1, 0);
+    const decoyCount = Math.min(decoyBudget, shuffledDecoyPool.length);
     const decoys = shuffledDecoyPool.slice(0, decoyCount);
 
-    spawnQueue = shuffled([...targets, ...decoys]);
+    // toluene gets shuffled in with everything else, so it shows up
+    // once, at a random point, while fractions are still coming through
+    spawnQueue = shuffled([...targets, ...decoys, TOLUENE_MARKER]);
 
     const html = `
     <div class="screen">
@@ -178,6 +193,18 @@ function stopGame() {
 
 }
 
+// thin aliases so the toluene pause/resume path reads clearly at the
+// call site, even though they're just the existing start/stop under the hood
+function pauseGame() {
+    paused = true;
+    stopGame();
+}
+
+function resumeGame() {
+    paused = false;
+    startGame();
+}
+
 function spawnTube() {
 
     if (spawnQueue.length === 0) {
@@ -189,23 +216,24 @@ function spawnTube() {
     }
 
     const number = spawnQueue.shift();
+    const isToluene = number === TOLUENE_MARKER;
 
     const tube = document.createElement("div");
 
-    tube.className = "fraction-tube";
+    tube.className = isToluene ? "fraction-tube toluene" : "fraction-tube";
     tube.style.position = "absolute";
     tube.style.left = "-40px";
     tube.style.top = (10 + Math.random() * (GAME_AREA_HEIGHT - 80)) + "px";
 
     const img = document.createElement("img");
-    img.src = fractionSprite;
+    img.src = isToluene ? tolueneSprite : fractionSprite;
     img.className = "fraction-sprite-img";
     img.alt = "";
     img.draggable = false;
 
     const label = document.createElement("span");
     label.className = "fraction-label";
-    label.textContent = number;
+    label.textContent = isToluene ? "TOL" : number;
 
     tube.appendChild(img);
     tube.appendChild(label);
@@ -213,11 +241,18 @@ function spawnTube() {
     const entry = {
         element: tube,
         number: number,
+        isToluene: isToluene,
         x: -40,
         resolved: false
     };
 
-    tube.addEventListener("click", () => handleTubeClick(entry));
+    tube.addEventListener("click", () => {
+        if (isToluene) {
+            handleToluenePickup(entry);
+        } else {
+            handleTubeClick(entry);
+        }
+    });
 
     document
         .getElementById("fractionArea")
@@ -256,7 +291,7 @@ function animate() {
 
 function handleTubeClick(entry) {
 
-    if (entry.resolved || gameOver) {
+    if (entry.resolved || gameOver || paused) {
         return;
     }
 
@@ -290,11 +325,39 @@ function handleTubeClick(entry) {
 
 }
 
+function handleToluenePickup(entry) {
+
+    if (entry.resolved || gameOver || paused) {
+        return;
+    }
+
+    entry.resolved = true;
+    pauseGame();
+
+    showToluenePrompt(
+        () => {
+            // drank it - run's over
+            stopGame();
+            gameOver = true;
+            showTolueneGameOver();
+        },
+        () => {
+            // declined - tube just goes away, no score effect, game resumes
+            removeTube(entry);
+            resumeGame();
+            checkGameEnd();
+        }
+    );
+
+}
+
 function missTube(entry) {
 
     entry.resolved = true;
 
-    if (isInRange(entry.number)) {
+    // toluene tubes are optional pickups - drifting offscreen unclicked
+    // just makes it disappear, it's not a real fraction to miss
+    if (!entry.isToluene && isInRange(entry.number)) {
         mistakes++;
     }
 
@@ -334,7 +397,7 @@ function updateHud() {
 
 function checkGameEnd() {
 
-    if (gameOver) {
+    if (gameOver || paused) {
         return;
     }
 
