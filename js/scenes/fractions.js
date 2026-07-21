@@ -13,8 +13,7 @@ const RANGE_MIN = 0;
 const RANGE_MAX = 16;
 const MIN_TARGET_SIZE = 4;
 const MAX_TARGET_SIZE = 6;
-
-const GAME_AREA_HEIGHT = 180;
+const GAME_AREA_HEIGHT = 120;
 
 let tubes = [];
 let spawnQueue = [];
@@ -45,6 +44,12 @@ function pickTargetRange() {
 }
 
 export function showFractionsGame() {
+
+    // defensive: if a previous run somehow never reached its game-over
+    // path (e.g. the animate loop was left dangling), make sure it's
+    // killed before we start a fresh one - two rAF loops stacking on
+    // top of each other is what caused the "faster on retry" bug.
+    stopGame();
 
     // reset all per-run state - showFractionsGame can be called again
     // for a retry, so nothing here can be left over from last time.
@@ -103,8 +108,8 @@ export function showFractionsGame() {
         <span id="fractionScore">Collected: 0 / ${targetsTotal}</span>
         <span id="fractionMistakes">Mistakes: 0</span>
     </div>
-    <div class=panel>
-        <div id="fractionArea" class="chemical-grid"></div>
+    <div class="fraction-board">
+        <div id="fractionArea" class="fraction-area"></div>
     </div>
     <div class="navigation">
         <button id="backButton">
@@ -118,15 +123,13 @@ export function showFractionsGame() {
 
     showScene(html);
 
-    // #fractionArea needs to be its own contained game space: a
-    // positioned, clipped box so the absolutely-positioned tubes are
-    // constrained to it instead of escaping to whatever positioned
-    // ancestor the browser finds further up the tree.
+    // #fractionArea's own height is still driven by the JS constant so
+    // there's a single source of truth for it; width/position/overflow
+    // now live in the .fraction-area CSS class instead of being set here,
+    // so it can never mismatch its parent's actual available width again.
     const fractionArea = document.getElementById("fractionArea");
 
     if (fractionArea) {
-        fractionArea.style.position = "relative";
-        fractionArea.style.overflow = "hidden";
         fractionArea.style.height = GAME_AREA_HEIGHT + "px";
     }
 
@@ -192,7 +195,7 @@ function spawnTube() {
     tube.className = "fraction-tube";
     tube.style.position = "absolute";
     tube.style.left = "-40px";
-    tube.style.top = (40 + Math.random() * (GAME_AREA_HEIGHT - 60)) + "px";
+    tube.style.top = (10 + Math.random() * (GAME_AREA_HEIGHT - 80)) + "px";
 
     const img = document.createElement("img");
     img.src = fractionSprite;
@@ -276,10 +279,14 @@ function handleTubeClick(entry) {
 
     updateHud();
 
-    // brief flash of correct/incorrect state before the tube vanishes
-    setTimeout(() => removeTube(entry), 200);
-
-    checkGameEnd();
+    // brief flash of correct/incorrect state before the tube vanishes -
+    // checkGameEnd() has to run AFTER removeTube, not before, or the
+    // last tube clicked is still sitting in `tubes` when we check for
+    // an empty array and the win condition never fires.
+    setTimeout(() => {
+        removeTube(entry);
+        checkGameEnd();
+    }, 200);
 
 }
 
@@ -346,32 +353,31 @@ function checkGameEnd() {
 
 function showResult(passed) {
 
-    const nav = document.querySelector(".navigation");
+    let html = `
+    <div class="screen">
+        <div class="panel">
+    `;
+
+    const message = passed
+        ? "All fractions collected!"
+        : `Collected ${targetsCollected} / ${targetsTotal}, ${mistakes} mistake(s).`;
+
+    html += `
+            <h2>${passed ? "LEVEL CLEAR" : "GAME OVER"}</h2>
+            <p class="result-message">${message}</p>
+            
+                ${passed ? "" : '<button id="retryButton">TRY AGAIN</button>'}
+                <button id="menuButton">RETURN TO MENU</button>
+            
+        </div>
+    </div>
+    `;
+
+    showScene(html);
 
     if (passed) {
-
         unlockGame("fractions");
-
-        nav.innerHTML = `
-            <p class="result-message">All fractions collected!</p>
-            <button id="menuButton">
-                RETURN TO MENU
-            </button>
-        `;
-
     } else {
-
-        nav.innerHTML = `
-            <p class="result-message">
-                Collected ${targetsCollected} / ${targetsTotal}, ${mistakes} mistake(s).
-            </p>
-            <button id="retryButton">
-                TRY AGAIN
-            </button>
-            <button id="menuButton">
-                RETURN TO MENU
-            </button>
-        `;
 
         document
             .getElementById("retryButton")

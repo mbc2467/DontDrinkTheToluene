@@ -200,7 +200,7 @@ function showBufferFail(missing, extra) {
 
         html += `
 
-            <h2>Missing</h2>
+            <p>Missing</p>
 
             <ul>
 
@@ -219,7 +219,7 @@ function showBufferFail(missing, extra) {
 
         html += `
 
-            <h2>Extra</h2>
+            <p>Extra</p>
 
             <ul>
 
@@ -237,9 +237,10 @@ function showBufferFail(missing, extra) {
     html += `
 
             <button id="retryButton">
-
                 TRY AGAIN
-
+            </button>
+            <button id="menuButton">
+                RETURN TO MENU
             </button>
 
         </div>
@@ -253,5 +254,7 @@ function showBufferFail(missing, extra) {
     document
         .getElementById("retryButton")
         .addEventListener("click", showBufferGame);
-
+    document
+        .getElementById("menuButton")
+        .addEventListener("click", () => setScene(showMenu));
 }

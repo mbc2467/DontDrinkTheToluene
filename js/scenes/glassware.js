@@ -205,7 +205,9 @@ export function showGlasswareGame() {
                     <button id="retryButton">
                         TRY AGAIN
                     </button>
-
+                    <button id="menuButton">
+                        RETURN TO MENU
+                    </button>
                 </div>
 
             </div>
@@ -214,7 +216,9 @@ export function showGlasswareGame() {
         document
             .getElementById("retryButton")
             .addEventListener("click", showGlasswareGame);
-
+        document
+            .getElementById("menuButton")
+            .addEventListener("click", () => setScene(showMenu));
     }
 
 }
