@@ -1,6 +1,7 @@
 import { minigames } from "../data/minigames.js";
+import { characters } from "../data/characters.js";
 
-export const DEBUG = true;
+export const DEBUG = false;
 
 let state = {
 
@@ -56,3 +57,11 @@ export function getCharacter() {
     return state.character;
 }
 
+export function unlockMalcolm() {
+  const malcolm = characters.find(char => char.id === 'malcolm');
+
+  if (malcolm) {
+    malcolm.unlocked = true;
+    malcolm.description = "Training complete. Malcolm is now available!";
+  }
+}

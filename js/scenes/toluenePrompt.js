@@ -49,7 +49,6 @@ export function showToluenePrompt(onYes, onNo) {
     document.getElementById("yesButton").onclick = () => {
 
         overlay.remove();
-
         setScene(showTolueneGameOver);
 
     };

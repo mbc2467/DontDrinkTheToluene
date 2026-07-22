@@ -10,6 +10,7 @@ import { unlockGame } from "../engine/gameState.js";
 import { setScene } from "../engine/sceneManager.js";
 import { showMenu } from "./menu.js";
 import { showTitle } from "./title.js";
+import { unlockAchievement } from "./achievements.js";
 
 let currentBuffer = null;
 let selectedChemicals = [];
@@ -178,6 +179,7 @@ function showBufferWin() {
 
     `);
     unlockGame("sec");
+    unlockAchievement("first_buffer");
     document
         .getElementById("menuButton")
         .addEventListener("click", () => setScene(showMenu));

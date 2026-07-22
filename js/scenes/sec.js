@@ -2,6 +2,8 @@ import { showScene, setScene } from "../engine/sceneManager.js";
 import { showMenu } from "./menu.js";
 import { unlockGame } from "../engine/gameState.js";
 
+import { unlockAchievement } from "./achievements.js";
+
 let selectedPort = null;
 
 // Every connection is stored here
@@ -532,21 +534,7 @@ function checkConnections() {
 
     if (solved) {
 
-        unlockGame("fractions");
-
-        document.querySelector(".navigation").innerHTML = `
-            <button id="menuButton">
-                RETURN TO MENU
-            </button>
-        `;
-
-        document
-            .getElementById("menuButton")
-            .addEventListener("click", () => {
-
-                setScene(showMenu);
-
-            });
+        showSECWin();
 
     }
 
@@ -576,6 +564,8 @@ function showSECWin() {
 
     `);
     unlockGame("fractions");
+    unlockAchievement("perfect_sec");
+    console.log("SHOULD UNLOCK SEC ACHIEVEMENT");
     document
         .getElementById("menuButton")
         .addEventListener("click", () => setScene(showMenu));

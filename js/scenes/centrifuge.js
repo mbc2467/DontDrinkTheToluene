@@ -5,7 +5,11 @@ import { unlockGame } from "../engine/gameState.js";
 import { showToluenePrompt } from "./toluenePrompt.js";
 import { showTolueneGameOver } from "./tolueneGameOver.js";
 
-import { tolueneSprite } from "../data/sprites.js";
+import { unlockMalcolm } from "../engine/gameState.js";
+
+import { fractionSprite, tolueneFractionSprite } from "../data/sprites.js";
+
+import { unlockAchievement } from "./achievements.js";
 
 // 10 rotor positions = 5 pairs = 10 total tubes (Toluene, Buffer, one or
 // more proteins, and generic Balance tubes filling out the rest)
@@ -27,11 +31,11 @@ const MIN_SHAKE_PX = 2;
 const MAX_SHAKE_PX = 16;
 
 // --- rotor disc geometry (pixel-art bitmap, not an image asset) ---
-const ROTOR_GRID = 30;       // bitmap resolution (cells across)
+const ROTOR_GRID = 35;       // bitmap resolution (cells across)
 const ROTOR_PIXEL = 10;       // px size of each bitmap cell when rendered
 const ROTOR_DISC_PX = ROTOR_GRID * ROTOR_PIXEL;
 const SLOT_RADIUS_FRAC = 0.72; // slot ring radius as a fraction of disc radius
-const SLOT_SIZE = 40;
+const SLOT_SIZE = 50;
 
 const PROTEIN_SAMPLES = ["Alpha", "Beta High", "Beta Low 1", "Beta Low 2", "Gamma"];
 
@@ -79,57 +83,60 @@ function generateDistinctVolumes(count) {
 
 }
 
-function makeTube(label, volume) {
+function makeTube(label, volume, trayIndex) {
 
     return {
         id: nextId(),
         label: label,
         volume: volume,
         isToluene: label === "Toluene",
+        trayIndex: trayIndex,
         // "tray" | "scale" | numeric rotor slot index
         location: "tray"
     };
 
 }
 
-// every round always has Toluene + Buffer + at least one protein;
-// remaining slots are backfilled with generic "Balance N" tubes so the
-// tube count always exactly matches ROTOR_POSITIONS
+// always Toluene + Buffer + exactly 3 of the 5 possible proteins = 5
+// samples, each paired with one of 5 generic "Balance N" tubes. Which
+// balance actually matches which sample's volume is shuffled
+// independently, so tray position never gives away the pairing.
 function buildTubes() {
 
-    const proteinPool = shuffled(PROTEIN_SAMPLES);
-    const proteinCount = 1 + Math.floor(Math.random() * proteinPool.length);
-    const chosenProteins = proteinPool.slice(0, proteinCount);
-
-    const labels = ["Toluene", "Buffer", ...chosenProteins];
-
-    const genericNeeded = ROTOR_POSITIONS - labels.length;
-
-    for (let i = 1; i <= genericNeeded; i++) {
-        labels.push(`Balance ${i}`);
-    }
-
-    const shuffledLabels = shuffled(labels);
     const pairCount = ROTOR_POSITIONS / 2;
+
+    const shuffledProteinPool = shuffled(PROTEIN_SAMPLES);
+    const chosenProteinsRandom = shuffledProteinPool.slice(0, 3);
+
+    // keep the chosen proteins in their canonical PROTEIN_SAMPLES order
+    // for display, so the tray layout stays stable/predictable round to
+    // round rather than jumbling every time
+    const chosenProteinsOrdered = PROTEIN_SAMPLES.filter(p =>
+        chosenProteinsRandom.includes(p)
+    );
+
+    const sampleLabels = ["Toluene", "Buffer", ...chosenProteinsOrdered];
+
     const volumes = generateDistinctVolumes(pairCount);
 
-    const built = [];
+    const groupA = sampleLabels.map((label, i) =>
+        makeTube(label, volumes[i], i)
+    );
 
-    // walk the shuffled label list two at a time, and give each pair the
-    // same volume - this is what actually defines "who belongs together",
-    // completely independent of what the two labels happen to be
-    for (let i = 0; i < pairCount; i++) {
+    const balanceLabels = [];
 
-        const volume = volumes[i];
-        const labelA = shuffledLabels[i * 2];
-        const labelB = shuffledLabels[i * 2 + 1];
-
-        built.push(makeTube(labelA, volume));
-        built.push(makeTube(labelB, volume));
-
+    for (let i = 1; i <= pairCount; i++) {
+        balanceLabels.push(`Balance ${i}`);
     }
 
-    return shuffled(built);
+    const shuffledBalanceLabels = shuffled(balanceLabels);
+    const shuffledVolumesForB = shuffled(volumes);
+
+    const groupB = shuffledBalanceLabels.map((label, i) =>
+        makeTube(label, shuffledVolumesForB[i], pairCount + i)
+    );
+
+    return [...groupA, ...groupB];
 
 }
 
@@ -282,6 +289,20 @@ function moveTube(tubeId, destination) {
         return;
     }
 
+    // if something's already sitting at the destination (a rotor slot or
+    // the scale), eject it back to its own tray slot before placing the
+    // newly selected tube - trayIndex is permanent, so it always lands
+    // back in the same grid cell it started from
+    if (destination !== "tray") {
+
+        const occupant = tubes.find(t => t.id !== tubeId && t.location === destination);
+
+        if (occupant) {
+            occupant.location = "tray";
+        }
+
+    }
+
     tube.location = destination;
 
     // any rearrangement invalidates the last spin's read - the player
@@ -322,21 +343,14 @@ function handleDestinationClick(destination) {
         return;
     }
 
-    // guard against the destination having been filled by something else
-    // between selection and this click (shouldn't normally happen since
-    // occupied spots are caught by the tube's own click handler first)
-    if (destination !== "tray") {
-
-        const occupied = tubes.some(t => t.id !== selectedTubeId && t.location === destination);
-
-        if (occupied) {
-            return;
-        }
-
-    }
-
-    moveTube(selectedTubeId, destination);
+    // clear selection BEFORE moving, so the renderBoard() call inside
+    // moveTube() already reflects "nothing selected" - clearing it after
+    // moveTube() left the just-placed tube visually stuck in its
+    // selected state until some unrelated render happened to fire
+    const tubeId = selectedTubeId;
     selectedTubeId = null;
+
+    moveTube(tubeId, destination);
 
 }
 
@@ -362,16 +376,18 @@ function createTubeElement(tube) {
     if (tube.isToluene) {
 
         const img = document.createElement("img");
-        img.src = tolueneSprite;
+        img.src = tolueneFractionSprite;
         img.className = "tube-sprite-img";
         img.alt = "";
         el.appendChild(img);
 
     } else {
 
-        const vial = document.createElement("div");
-        vial.className = "tube-vial";
-        el.appendChild(vial);
+        const img = document.createElement("img");
+        img.src = fractionSprite;
+        img.className="tube-sprite-img";
+        img.alt="";
+        el.appendChild(img);
 
     }
 
@@ -399,9 +415,23 @@ function renderTray() {
 
     tray.innerHTML = "";
 
-    tubes
-        .filter(t => t.location === "tray")
-        .forEach(t => tray.appendChild(createTubeElement(t)));
+    // always render all 10 fixed cells, in trayIndex order - a cell just
+    // stays empty once its tube has been placed elsewhere, so nothing
+    // else in the grid ever shifts around
+    for (let i = 0; i < ROTOR_POSITIONS; i++) {
+
+        const slot = document.createElement("div");
+        slot.className = "tray-slot";
+
+        const occupant = tubes.find(t => t.trayIndex === i && t.location === "tray");
+
+        if (occupant) {
+            slot.appendChild(createTubeElement(occupant));
+        }
+
+        tray.appendChild(slot);
+
+    }
 
 }
 
@@ -683,27 +713,62 @@ function openToluenePrompt() {
 function showCentrifugeSuccess() {
 
     showScene(`
-    <div class="screen">
-        <div class="panel">
-            <!-- TODO: customize success screen -->
-            <!-- e.g. h1 "SUCCESS", message "The rotor is perfectly -->
-            <!-- balanced. Your samples are ready for light scattering.", -->
-            <!-- a RETURN TO MENU button, and unlockGame(...) -->
+
+        <div class="screen">
+
+            <div class="panel">
+
+                <h1>CENTRIFUGE BALANCED</h1>
+
+                <p>
+                    Great Job!
+                </p>
+
+                <button id="menuButton">
+                    RETURN TO MENU
+                </button>
+
+            </div>
+
         </div>
-    </div>
+
     `);
+    unlockAchievement("balance_centrifuge");
+    unlockMalcolm();
+    unlockAchievement("malcolm");
+    document
+        .getElementById("menuButton")
+        .addEventListener("click", () => setScene(showMenu));
 
 }
 
 function showCentrifugeFailure() {
 
-    showScene(`
+    let html = `
     <div class="screen">
         <div class="panel">
-            <!-- TODO: customize failure screen -->
-            <!-- only reached if MAX_ATTEMPTS is set to a number above -->
+
+                <h1>CENTRIFUGE NOT BALANCED</h1>
+
+                <p>
+                    Great Job!
+                </p>
+
+                <button id="retryButton">
+                    TRY AGAIN
+                </button>
+                <button id="menuButton">
+                    RETURN TO MENU
+                </button>           
         </div>
     </div>
-    `);
+    `;
+    showScene(html);
 
+    document
+        .getElementById("retryButton")
+        .addEventListener("click", showBufferGame);
+    document
+        .getElementById("menuButton")
+        .addEventListener("click", () => setScene(showMenu));
 }

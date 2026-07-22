@@ -1,6 +1,7 @@
 import { showScene, setScene } from "../engine/sceneManager.js";
 import { showCharacterSelect } from "./characterSelect.js";
 import { showCredits } from "./credits.js";
+import { showAchievements } from "./achievements.js";
 
 export function showTitle() {
 
@@ -22,7 +23,7 @@ export function showTitle() {
                     Play
                 </button>
 
-                <button class="secondary-button">
+                <button id="achievementsButton" class="secondary-button">
                     Achievements
                 </button>
 
@@ -46,5 +47,9 @@ export function showTitle() {
         .addEventListener("click", () => {
             setScene(showCredits);
         });
-
+    document
+        .getElementById("achievementsButton")
+        .addEventListener("click", () => {
+            setScene(showAchievements);
+        });
 }

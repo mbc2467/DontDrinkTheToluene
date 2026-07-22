@@ -6,6 +6,8 @@ import { fractionSprite, tolueneSprite } from "../data/sprites.js";
 import { showToluenePrompt } from "./toluenePrompt.js";
 import { showTolueneGameOver } from "./tolueneGameOver.js";
 
+import { showAchievements, unlockAchievement } from "./achievements.js";
+
 const TOTAL_TUBES = 18;
 const SPAWN_INTERVAL_MS = 900;
 const TUBE_SPEED = 1.0;
@@ -440,6 +442,7 @@ function showResult(passed) {
 
     if (passed) {
         unlockGame("centrifuge");
+        unlockAchievement("perfect_fractions");
     } else {
 
         document

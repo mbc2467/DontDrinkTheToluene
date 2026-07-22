@@ -3,10 +3,13 @@ import { showTitle } from "./title.js";
 import { setScene } from "../engine/sceneManager.js";
 import { getCharacter } from "../engine/gameState.js";
 
+import { unlockAchievement } from "./achievements.js";
+
 export function showTolueneGameOver() {
     let html = '';
     console.log('CHARACTER: ' + getCharacter());
     if (getCharacter() === "malcolm") {
+        unlockAchievement("malcolm_drinks");
         html += `
         <div class="screen">
             <div class="panel gameover-panel">
@@ -20,7 +23,7 @@ export function showTolueneGameOver() {
                         Against all known laws of chemistry, the toluene grants you complete
                         mastery of protein science and your next paper is accepted into Nature
                         before you've even written it. The spirit of Carl Sagan emerges and
-                        announces you have unlimited beamtime at CHESS.
+                        announces you have unlimited beamtime at CHEXS.
                     </p>
                     <button id="homeButton">
                         MAIN MENU
@@ -36,6 +39,7 @@ export function showTolueneGameOver() {
         </div>
         `
     } else {
+        unlockAchievement("drink_toluene");
         html += `
         <div class="screen">
             <div class="panel gameover-panel">

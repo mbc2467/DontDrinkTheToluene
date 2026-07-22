@@ -8,6 +8,8 @@ import { showTolueneGameOver } from "./tolueneGameOver.js";
 import { dirtyGlassSprites } from "../data/sprites.js";
 import { tolueneSprite } from "../data/sprites.js";
 
+import { unlockAchievement } from "./achievements.js";
+
 export function showGlasswareGame() {
 
     let cleaned = 0;
@@ -160,7 +162,7 @@ export function showGlasswareGame() {
     function winGame() {
 
         unlockGame("sec");
-
+        unlockAchievement("perfect_glassware");
         showScene(`
             <div class="screen">
 
@@ -180,7 +182,7 @@ export function showGlasswareGame() {
 
             </div>
         `);
-
+        
         document
             .getElementById("menuButton")
             .addEventListener("click", () => {

@@ -795,8 +795,8 @@ button:hover:not(:disabled) {
     text-align: center;
     font-weight: bold;
     color: var(--red);
-    min-height: 1.5em;
-    margin: 8px 0;
+    min-height: 0.5em;
+    margin: 0;
 }
 
 .centrifuge-layout {
@@ -805,7 +805,7 @@ button:hover:not(:disabled) {
     justify-content: space-between;
     gap: 16px;
     width: 100%;
-    margin: 0px 0;
+    margin: 6px 0;
 }
 
 .rotor-column {
@@ -879,7 +879,7 @@ button:hover:not(:disabled) {
 }
 
 .rotor-slot:hover {
-    border: 4px solid white;
+    outline: 2px solid white;
 }
 
 .rotor-slot.slot-correct {
@@ -895,16 +895,15 @@ button:hover:not(:disabled) {
 /* --- Tube items (shared by tray, rotor slots, and scale) --- */
 
 .tube-tray {
-    display: flex;
-    flex-wrap: wrap;
-    align-content: flex-start;
-    justify-content: center;
+    display: grid;
+    grid-template-columns: repeat(5, 64px);
+    grid-template-rows: repeat(2, 92px);
     gap: 10px;
-    min-height: 110px;
+    justify-content: center;
+    align-content: center;
     width: 100%;
-    padding: 10px;
-    border: 4px white;
-    border-radius: 0px;
+    padding: 14px;
+    border: 4px solid white;
     cursor: pointer;
 }
 
@@ -919,39 +918,48 @@ button:hover:not(:disabled) {
     user-select: none;
 }
 
-.tube-tray .tube-item {
-    width: 44px;
-    height: 64px;
+.tray-slot {
+    width: 64px;
+    height: 92px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
+.tray-slot .tube-item {
+    width: 64px;
+    height: 92px;
+}
+
+.tube-item:hover {
+    background-color: white;
+    color: black;
+}
 .tube-selected {
-    border:4px solid white;
+    outline:4px solid white;
     /*filter: drop-shadow(0 0 6px #ffd54a) drop-shadow(0 0 6px #ffd54a);
     transform: scale(1.08);*/
 }
+.tube-sprite-img {
 
-.tube-vial {
-    width: 18px;
-    height: 30px;
-    background: linear-gradient(to bottom, #7fd0e8 0%, #4fa8c9 100%);
-    border: 1px solid #2f7a94;
-    border-radius: 3px 3px 8px 8px;
-}
-
-.toluene-tube .tube-sprite-img {
-    width: 22px;
-    height: 34px;
+    width: 48px;
+    height: 72px;
     object-fit: contain;
+    image-rendering: pixelated;
+
 }
 
 .tube-label {
     margin-top: 4px;
-    font-size: 10px;
-    line-height: 1.1;
+    font-size: 11px;
+    line-height: 1.15;
     text-align: center;
-    color: #eee;
-    max-width: 52px;
+    color: white;
+    max-width: 72px;
     word-break: break-word;
+}
+.tube-item:hover .tube-label{
+    color: black;
 }
 
 /* --- Scale --- */
@@ -962,36 +970,34 @@ button:hover:not(:disabled) {
     align-items: center;
     gap: 10px;
     padding: 14px;
-    background: #2b2f36;
-    border: 2px solid #555;
-    border-radius: 6px;
+    background: #7c828a;
+    border: 2px solid white;
 }
 
 .scale-plate {
-    width: 90px;
-    height: 90px;
+    width: 100px;
+    height: 100px;
     background: #45494f;
-    border: 2px solid #6b7078;
-    border-radius: 4px;
+    border: 2px solid white;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
 }
-
+.scale-plate:hover {
+    outline: 2px solid white;
+}
 .scale-plate .tube-item {
-    width: 44px;
-    height: 64px;
+    width: 64px;
+    height: 92px;
 }
 
 .scale-display {
     width: 100px;
     padding: 6px 4px;
-    background: #0d1a10;
-    border: 1px solid #1f3a24;
-    border-radius: 3px;
-    color: #6dffa0;
-    font-family: 'Courier New', monospace;
+    background: black;
+    border: 2px solid var(--green);
+    color: var(--green);
     font-size: 15px;
     font-weight: bold;
     text-align: center;
@@ -1084,4 +1090,105 @@ button:hover:not(:disabled) {
 
 #centrifugePanel.jitter {
     animation: panel-jitter 0.1s linear infinite;
+}
+
+#centrifugePanel {
+    width: 1000px;
+}
+
+
+.achievements-panel {
+    width: 1000px;
+}
+
+.achievement-grid{
+
+    display:grid;
+
+    grid-template-columns:repeat(4, 1fr);
+
+    gap:16px;
+
+    margin:30px 0;
+
+}
+
+.achievement-card{
+
+    aspect-ratio:1;
+    width: 170px;
+    height:170px;
+    border:3px solid white;
+
+    padding:15px;
+
+    display:flex;
+
+    flex-direction:column;
+
+    justify-content:center;
+
+    align-items:center;
+
+    text-align:center;
+
+}
+.achievement-card.unlocked{
+
+    border-color:var(--green);
+    color:white;
+
+}
+
+.achievement-card.locked{
+
+    border-color:#555;
+    color:#666;
+
+}
+.achievement-popup{
+
+    position:fixed;
+
+    top:20px;
+    left:20px;
+
+    width:260px;
+
+    padding:14px;
+
+    background:black;
+
+    border:3px solid var(--green);
+
+    color:white;
+
+    z-index:9999;
+
+    transform:translateX(-320px);
+
+    transition:transform .3s;
+
+}
+
+.achievement-popup.show{
+
+    transform:translateX(0);
+
+}
+
+.achievement-popup-title{
+
+    color:var(--green);
+
+    font-size:11px;
+
+    margin-bottom:8px;
+
+}
+
+.achievement-popup-name{
+
+    font-size:14px;
+
 }
