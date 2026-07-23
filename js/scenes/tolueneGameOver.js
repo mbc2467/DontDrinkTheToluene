@@ -23,7 +23,7 @@ export function showTolueneGameOver() {
                         Against all known laws of chemistry, the toluene grants you complete
                         mastery of protein science and your next paper is accepted into Nature
                         before you've even written it. The spirit of Carl Sagan emerges and
-                        announces you have unlimited beamtime at CHEXS.
+                        announces you have unlimited beamtime at CHESS.
                     </p>
                     <button id="homeButton">
                         MAIN MENU
