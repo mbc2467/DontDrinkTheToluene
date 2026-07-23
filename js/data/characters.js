@@ -4,7 +4,7 @@ export const characters = [
         id: "mallory",
         name: "Mallory",
         title: "Physics Major",
-        description: "Has a puppy with an attitude problem",
+        description: "Has puppy with an attitude problem",
         sprite: "TolueneMallorySprite.png",
         unlocked: true
     },

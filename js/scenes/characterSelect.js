@@ -22,7 +22,7 @@ function createCharacterCard(character) {
 
                 <h2>${character.name}</h2>
 
-                <p>${character.title}</p>
+                <p><strong>${character.title}</strong></p>
 
                 <p>${character.description}</p>
 
