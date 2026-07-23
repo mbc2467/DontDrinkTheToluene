@@ -4,7 +4,7 @@ export const characters = [
         id: "mallory",
         name: "Mallory",
         title: "Physics Major",
-        description: "...",
+        description: "splits time with puppy",
         sprite: "TolueneMallorySprite.png",
         unlocked: true
     },
@@ -13,7 +13,7 @@ export const characters = [
         id: "nishi",
         name: "Nishi",
         title: "Chemistry Major",
-        description: "...",
+        description: "brings the best lunches",
         sprite: "TolueneNishiSprite.png",
         unlocked: true
     },
@@ -22,7 +22,7 @@ export const characters = [
         id: "michael",
         name: "Michael",
         title: "Physics Major",
-        description: "...",
+        description: "packing peanut enthusiast",
         sprite: "TolueneMichaelSprite.png",
         unlocked: true
     },
